@@ -2864,7 +2864,7 @@ bot.sendText(msg_chat_id,msg.id,"  ⌔︙ارسل الان الكلمه لحذف
 redis:set(bot_id.."Set:Manager:rd:inline"..msg.sender.user_id..":"..msg_chat_id,"true")
 end 
 if text == ("الردود الانلاين") then
-local list = redis:smembers(bot_id.."List:Manager:inline"..msg_chat_id.."")
+local list = redis:smembers(bot_id.."List:Manager:inline"..msg_chat_id)
 text = "  ⌔︙قائمه الردود الانلاين \n
    ٴ─━─━─━─×─━─━─━─\n"
 for k,v in pairs(list) do
