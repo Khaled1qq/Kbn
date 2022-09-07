@@ -8222,7 +8222,7 @@ end
 end
 
 if text == 'تثبيت النتائج' or text == 'تثبيت نتائج' then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 time = os.date("*t")
 month = time.month
 day = time.day
@@ -8274,7 +8274,7 @@ bot.sendText(msg.chat_id,msg.id, "⇜ ثبتت النتائج","md",true)
 end
 end
 if text == 'مسح كل الفلوس' or text == 'مسح كل فلوس' then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 local bank_users = redis:smembers("booob")
 for k,v in pairs(bank_users) do
 redis:del("boob"..v)
@@ -8292,7 +8292,7 @@ end
 end
 
 if text == 'تصفير النتائج' or text == 'مسح لعبه البنك' then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 local bank_users = redis:smembers("booob")
 for k,v in pairs(bank_users) do
 redis:del("boob"..v)
@@ -8392,7 +8392,7 @@ end
 end
 
 if text == 'مسح حسابه' and tonumber(msg.reply_to_message_id) ~= 0 then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 local Remsg = bot.getMessage(msg.chat_id, msg.reply_to_message_id)
 local UserInfo = bot.getUser(Remsg.sender.user_id)
 if UserInfo and UserInfo.type and UserInfo.type.luatele == "userTypeBot" then
@@ -8458,7 +8458,7 @@ end
 end
 
 if text and text:match('^مسح حساب (.*)$') or text and text:match('^مسح حسابه (.*)$') then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 local UserName = text:match('^مسح حساب (.*)$') or text:match('^مسح حسابه (.*)$')
 local coniss = coin(UserName)
 local ban = bot.getUser(coniss)
@@ -9666,7 +9666,7 @@ bot.sendText(msg.chat_id,msg.id, "⇜ انت لا تمتلك حساب بنكي �
 end
 end
 if text == 'مسح لعبه الزواج' then
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 local zwag_users = redis:smembers("roogg1")
 for k,v in pairs(zwag_users) do
 redis:del("roog1"..v)
@@ -10283,7 +10283,7 @@ end
 if text and text:match('^حظر حساب (.*)$') then
 local UserName = text:match('^حظر حساب (.*)$')
 local coniss = coin(UserName)
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 redis:set("bandid"..coniss,coniss)
 bot.sendText(msg.chat_id,msg.id, "⇜ تم حظر الحساب "..coniss.." من لعبة البنك\n✦","md",true)
 end
@@ -10291,7 +10291,7 @@ end
 if text and text:match('^الغاء حظر حساب (.*)$') then
 local UserName = text:match('^الغاء حظر حساب (.*)$')
 local coniss = coin(UserName)
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 redis:del("bandid"..coniss)
 bot.sendText(msg.chat_id,msg.id, "⇜ تم الغاء حظر الحساب "..coniss.." من لعبة البنك\n✦","md",true)
 end
@@ -10299,7 +10299,7 @@ end
 if text and text:match('^اضف كوبون (.*)$') then
 local UserName = text:match('^اضف كوبون (.*)$')
 local coniss = coin(UserName)
-if tonumber(msg.sender.user_id) == tonumber(Sudo_Id) then
+if tonumber(msg.sender.user_id) == tonumber(sudoid) then
 numcobo = math.random(1000000000000,9999999999999);
 redis:set("cobonum"..numcobo,numcobo)
 redis:set("cobon"..numcobo,coniss)
