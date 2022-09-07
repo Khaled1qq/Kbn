@@ -95,6 +95,22 @@ api_hash='9fb5fdf24e25e54b745478b4fb71573b',
 session_name=bot_id,
 token=Token
 }
+function coin(coin)
+local Coins = tostring(coin)
+local Coins = Coins:gsub('٠','0')
+local Coins = Coins:gsub('١','1')
+local Coins = Coins:gsub('٢','2')
+local Coins = Coins:gsub('٣','3')
+local Coins = Coins:gsub('٤','4')
+local Coins = Coins:gsub('٥','5')
+local Coins = Coins:gsub('٦','6')
+local Coins = Coins:gsub('٧','7')
+local Coins = Coins:gsub('٨','8')
+local Coins = Coins:gsub('٩','9')
+local Coins = Coins:gsub('-','')
+local conis = tonumber(Coins)
+return conis
+end 
 ----------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------
 namebot = redis:get(bot_id..":namebot") or " بلاك"
