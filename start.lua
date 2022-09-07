@@ -8105,7 +8105,7 @@ balas = 50
 if Redis:sismember("booob",msg.sender.user_id) then
 return bot.sendText(msg.chat_id,msg.id, "⇜ لديك حساب بنكي مسبقاً\n\n⇜ لعرض معلومات حسابك اكتب\n⇠ `حسابي`","md",true)
 end
-Redis:setex("booobb" .. msg.chat_id .. ":" .. msg.sender.user_id,60, true)
+Redis:setex(bot_id..msg.chat_id .. ":" .. msg.sender.user_id,60, true)
 bot.sendText(msg.chat_id,msg.id,[[
 ✠┊عليك اختيار نوع البطاقة للحفاظ على فلوسك 
 
@@ -8119,7 +8119,7 @@ bot.sendText(msg.chat_id,msg.id,[[
 ]],"md",true)  
 return false
 end
-if Redis:get("booobb" .. msg.chat_id .. ":" .. msg.sender.user_id) then
+if Redis:get(bot_id..msg.chat_id .. ":" .. msg.sender.user_id) then
 if text == "بنك الرشيد" then
 local ban = bot.getUser(msg.sender.user_id)
 if ban.first_name then
@@ -8138,7 +8138,7 @@ Redis:set("boballcc"..creditcc,creditcc)
 Redis:set("boballban"..creditcc,text)
 Redis:set("boballid"..creditcc,banid)
 Redis:sadd("booob",msg.sender.user_id)
-Redis:del("booobb" .. msg.chat_id .. ":" .. msg.sender.user_id) 
+Redis:del(bot_id..msg.chat_id .. ":" .. msg.sender.user_id) 
 bot.sendText(msg.chat_id,msg.id, "\n• وعملنالك لك حساب في بنك فلاش 🏦\n• وشحنالك 50 دينار 💵 هدية\n\n⇜ رقم حسابك › ( `"..creditcc.."` )\n⇜ نوع البطاقة › ( بنك الرشيد 💳 )\n⇜ فلوسك › ( 50 دينار 💵 )  ","md",true)  
 end 
 if text == "بنك الرافدين" then
@@ -8159,7 +8159,7 @@ Redis:set("boballcc"..creditvi,creditvi)
 Redis:set("boballban"..creditvi,text)
 Redis:set("boballid"..creditvi,banid)
 Redis:sadd("booob",msg.sender.user_id)
-Redis:del("booobb" .. msg.chat_id .. ":" .. msg.sender.user_id) 
+Redis:del(bot_id..msg.chat_id .. ":" .. msg.sender.user_id) 
 bot.sendText(msg.chat_id,msg.id, "\n• وعملنالك لك حساب في بنك فلاش 🏦\n• وشحنالك 50 دينار 💵 هدية\n\n⇜ رقم حسابك › ( `"..creditvi.."` )\n⇜ نوع البطاقة › ( بنك الرافدين 💳 )\n⇜ فلوسك › ( 50 دينار 💵 )  ","md",true)   
 end 
 if text == "بنك الدولي" then
@@ -8180,7 +8180,7 @@ Redis:set("boballcc"..creditex,creditex)
 Redis:set("boballban"..creditex,text)
 Redis:set("boballid"..creditex,banid)
 Redis:sadd("booob",msg.sender.user_id)
-Redis:del("booobb" .. msg.chat_id .. ":" .. msg.sender.user_id) 
+Redis:del(bot_id..msg.chat_id .. ":" .. msg.sender.user_id) 
 bot.sendText(msg.chat_id,msg.id, "\n• وعملنالك لك حساب في بنك فلاش 🏦\n• وشحنالك 50 دينار 💵 هدية\n\n⇜ رقم حسابك › ( `"..creditex.."` )\n⇜ نوع البطاقة › ( بنك الدولي💳 )\n⇜ فلوسك › ( 50 دينار 💵 )  ","md",true)   
 end 
 end
