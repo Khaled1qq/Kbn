@@ -3592,8 +3592,17 @@ namet = {"اسمي "..(redis:get(bot_id..":namebot") or "بلاك"),"عمريي 
 bot.sendText(msg.chat_id,msg.id,"*"..namet[math.random(#namet)].."*","md",true)  
 end
 if text == "بوت" or text == (redis:get(bot_id..":namebot") or "بلاك") then
-nameBot = {"ها حبي","نعم تفضل ؟","محتاج شي","عندي اسم وعيونك","تفضل خبصتني","هاككو","وقزلقرطططط شرايد","عندي اسم وعيونك","بوت اللفك نشالله شتري","قول حياتي","الحجايه هاي لاتجيبها على لسانك بعد","باوع لك خليني احبك وصيحلي باسمي","هاااا فضني"}
+nameBot = {"ها حبي","نعم تفضل ؟","محتاج شي","عوفني ضايج","خبصتني ترى","هاككو","ها مولاي","هياتني","شتريد؟ ","امرني حياتي","ها سيد","ها يروحي","هاااا فضني"}
 bot.sendText(msg.chat_id,msg.id,"*"..nameBot[math.random(#nameBot)].."*","md",true)  
+end
+if text == "معرفي" or text == "يوزري" then
+local ban = bot.getUser(msg.sender.user_id)
+if ban.username then
+banusername = '[@'[..ban.username..]']'
+else
+banusername = 'لا يوجد'
+end
+return LuaTele.sendText(msg_chat_id,msg_id,'\n⌔︙معرفك هذا : @'..ban.username,"md",true)
 end
 if text == "التاريخ" then
 bot.sendText(msg.chat_id,msg.id,"*  ⌔︙التاريخ الان : ( "..os.date("%Y/%m/%d").." )*","md",true)  
