@@ -3595,15 +3595,9 @@ if text == "بوت" or text == (redis:get(bot_id..":namebot") or "بلاك") the
 nameBot = {"ها حبي","نعم تفضل ؟","محتاج شي","عوفني ضايج","خبصتني ترى","هاككو","ها مولاي","هياتني","شتريد؟ ","امرني حياتي","ها سيد","ها يروحي","هاااا فضني"}
 bot.sendText(msg.chat_id,msg.id,"*"..nameBot[math.random(#nameBot)].."*","md",true)  
 end
-if text == "معرفي" or text == "يوزري" then
-local ban = bot.getUser(msg.sender.user_id)
-if ban.username then
-banusername = '[@'[..ban.username..]']'
-else
-banusername = 'لا يوجد'
-end
-return LuaTele.sendText(msg_chat_id,msg_id,'\n⌔︙معرفك هذا : @'..ban.username,"md",true)
-end
+--------
+
+----------
 if text == "التاريخ" then
 bot.sendText(msg.chat_id,msg.id,"*  ⌔︙التاريخ الان : ( "..os.date("%Y/%m/%d").." )*","md",true)  
 end
