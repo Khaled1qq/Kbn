@@ -2547,6 +2547,9 @@ redis:del(bot_id.."Rp:content:Text"..msg.chat_id..":"..v)
 elseif redis:get(bot_id.."Rp:content:VoiceNote"..msg.chat_id..":"..v) then
 redis:del(bot_id.."Rp:content:VoiceNote"..msg.chat_id..":"..v)
 redis:del(bot_id.."Rp:content:VoiceNote:caption"..msg.chat_id..":"..v)
+elseif redis:get(bot_id.."Rp:content:Video"..msg.chat_id..":"..v) then
+redis:del(bot_id.."Rp:content:Video"..msg.chat_id..":"..v)
+redis:del(bot_id.."Rp:content:Video:caption"..msg.chat_id..":"..v)
 end
 end
 redis:del(bot_id.."List:Rp:content"..msg.chat_id)
@@ -2601,6 +2604,8 @@ redis:del(bot_id.."Rp:content:Photo"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Photo:caption"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:Manager:File"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:Manager:File:caption"..msg.chat_id..":"..text)
+redis:del(bot_id.."Rp:content:Video"..msg.chat_id..":"..text)
+redis:del(bot_id.."Rp:content:Video:caption"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Audio"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Audio:caption"..msg.chat_id..":"..text)
 redis:sadd(bot_id.."List:Rp:content"..msg.chat_id, text)
@@ -2620,6 +2625,8 @@ redis:del(bot_id.."Rp:content:Photo"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Photo:caption"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:Manager:File"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:Manager:File:caption"..msg.chat_id..":"..text)
+redis:del(bot_id.."Rp:content:Video"..msg.chat_id..":"..text)
+redis:del(bot_id.."Rp:content:Video:caption"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Audio"..msg.chat_id..":"..text)
 redis:del(bot_id.."Rp:content:Audio:caption"..msg.chat_id..":"..text)
 redis:del(bot_id..":"..msg.chat_id..":"..msg.sender.user_id..":Rp:del")
@@ -2643,6 +2650,8 @@ elseif redis:get(bot_id.."Rp:content:Photo"..msg.chat_id..":"..v) then
 db = "صورة 🎇"
 elseif redis:get(bot_id.."Rp:Manager:File"..msg.chat_id..":"..v) then
 db = "ملف • "
+elseif redis:get(bot_id.."Rp:content:Video"..msg.chat_id..":"..v) then
+db = "فيديو 📽 "
 elseif redis:get(bot_id.."Rp:content:Audio"..msg.chat_id..":"..v) then
 db = "اغنية 🎵"
 end
@@ -7830,10 +7839,12 @@ local VoiceNote = redis:get(bot_id.."Rp:content:VoiceNote"..msg.chat_id..":"..te
 local photo = redis:get(bot_id.."Rp:content:Photo"..msg.chat_id..":"..text)
 local document = redis:get(bot_id.."Rp:Manager:File"..msg.chat_id..":"..text)
 local audio = redis:get(bot_id.."Rp:content:Audio"..msg.chat_id..":"..text)
+local Video = redis:get(bot_id.."Rp:content:Video"..msg.chat_id..":"..text)
 local VoiceNotecaption = redis:get(bot_id.."Rp:content:VoiceNote:caption"..msg.chat_id..":"..text) or ""
 local photocaption = redis:get(bot_id.."Rp:content:Photo:caption"..msg.chat_id..":"..text) or ""
 local documentcaption = redis:get(bot_id.."Rp:Manager:File:caption"..msg.chat_id..":"..text) or ""
 local audiocaption = redis:get(bot_id.."Rp:content:Audio:caption"..msg.chat_id..":"..text) or ""
+local Videocaption = redis:get(bot_id.."Rp:content:Video:caption"..msg.chat_id..":"..text) or ""
 if Text  then
 local UserInfo = bot.getUser(msg.sender.user_id)
 local countMsg = redis:get(bot_id..":"..msg.chat_id..":"..msg.sender.user_id..":message") or 1
@@ -7858,6 +7869,10 @@ redis:sadd(bot_id.."Spam:Group"..msg.sender.user_id,text)
 end  
 if audio  then
 bot.sendAudio(msg.chat_id, msg.id, audio,"["..audiocaption.."]", "md")
+redis:sadd(bot_id.."Spam:Group"..msg.sender.user_id,text) 
+end
+if Video then
+bot.sendVideo(msg.chat_id, msg.id, Video,"["..Videocaption.."]", "md")
 redis:sadd(bot_id.."Spam:Group"..msg.sender.user_id,text) 
 end
 end 
@@ -8079,7 +8094,7 @@ bot.sendText(msg.chat_id,msg.id,[[
 
   ⌔︙ بخشيش › يعطيك بخشيش كل ١٠ دقايق
 
-  ⌔︙ زرف › تزرف فلوس اشخاص كل ١٠ دقايق
+  ⌔︙ سرقة › تسرق فلوس اشخاص كل ١٠ دقايق
 
   ⌔︙ استثمار › تستثمر بالمبلغ اللي تبيه مع نسبة ربح مضمونه من ١٪؜ الى ١٥٪؜
 
@@ -8093,13 +8108,13 @@ bot.sendText(msg.chat_id,msg.id,[[
 
   ⌔︙ هجوم › تهجم عالخصم مع زيادة نسبة كل هجوم
 
-  ⌔︙ كنز › يعطيك كنز بسعر مختلف انتا وحظك
+  ⌔︙ كنز › يعطيك كنز بسعر مختلف انت وحظك
 
   ⌔︙ مراهنه › تحط مبلغ وتراهن عليه
 
   ⌔︙ توب الفلوس › يطلع توب اكثر ناس معهم فلوس بكل الكروبات
 
-  ⌔︙ توب الحراميه › يطلع لك اكثر ناس زرفوا
+  ⌔︙ توب الحراميه › يطلع لك اكثر ناس سرقوا
 
   ⌔︙ زواج  › تكتبه بالرد على رسالة شخص مع المهر ويزوجك
 
@@ -8396,7 +8411,7 @@ uuuu = redis:get("bbobb"..msg.sender.user_id)
 pppp = redis:get("rrfff"..msg.sender.user_id) or 0
 ballancee = redis:get("boob"..msg.sender.user_id) or 0
 local convert_mony = string.format("%.0f",ballancee)
-bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..cccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ الزرف ( "..pppp.." دينار 💵 )\n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..cccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ السرقة ( "..pppp.." دينار 💵 )\n","md",true)
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ انت لا تمتلك حساب بنكي ارسل › ( `انشاء حساب بنكي` )","md",true)
 end
@@ -8434,7 +8449,7 @@ redis:del("roog1"..Remsg.sender.user_id)
 redis:del("rooga1"..Remsg.sender.user_id)
 redis:del("rahr1"..Remsg.sender.user_id)
 redis:del("rahrr1"..Remsg.sender.user_id)
-bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ الزرف › ( "..ppppp.." دينار 💵 )\n⇜ مسكين مسحت حسابه \n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ السرقة › ( "..ppppp.." دينار 💵 )\n⇜ مسكين مسحت حسابه \n","md",true)
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ لا يمتلك حساب بنكي اصلاً ","md",true)
 end
@@ -8462,7 +8477,7 @@ uuuuu = redis:get("bbobb"..Remsg.sender.user_id)
 ppppp = redis:get("rrfff"..Remsg.sender.user_id) or 0
 ballanceed = redis:get("boob"..Remsg.sender.user_id) or 0
 local convert_mony = string.format("%.0f",ballanceed)
-bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ الزرف › ( "..ppppp.." دينار 💵 )\n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ السرقة › ( "..ppppp.." دينار 💵 )\n","md",true)
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ لا يمتلك حساب بنكي ","md",true)
 end
@@ -8496,7 +8511,7 @@ redis:del("rahr1"..coniss)
 redis:del("rahrr1"..coniss)
 redis:del("numattack"..coniss)
 redis:srem("rrfffid", coniss)
-bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ الزرف › ( "..ppppp.." دينار 💵 )\n⇜ مسكين مسحت حسابه \n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ الاسم › "..news.."\n⇜ الحساب › `"..ccccc.."`\n⇜ بنك › ( فلاش )\n⇜ نوع › ( "..uuuuu.." )\n⇜ الرصيد › ( "..convert_mony.." دينار 💵 )\n⇜ السرقة › ( "..ppppp.." دينار 💵 )\n⇜ مسكين مسحت حسابه \n","md",true)
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ لا يمتلك حساب بنكي اصلاً ","md",true)
 end
@@ -8875,14 +8890,14 @@ data = {
 return bot.sendText(msg.chat_id,msg.id,top_monyy,"html",false, false, false, false, reply_markup)
 end
 
-if text == "توب الحراميه" or text == "توب الحرامية" or text == "توب حراميه" or text == "توب الزرف" or text == "توب زرف" then
+if text == "توب الحراميه" or text == "توب الحرامية" or text == "توب حراميه" or text == "توب السرقة" or text == "توب زرف" then
 local F_Name = bot.getUser(msg.sender.user_id).first_name
 redis:set(msg.sender.user_id.."first_name:", F_Name)
 local ty_users = redis:smembers("rrfffid")
 if #ty_users == 0 then
 return bot.sendText(msg.chat_id,msg.id,"⇜ لا يوجد احد","md",true)
 end
-ty_anubis = "توب 20 شخص زرفوا فلوس :\n\n"
+ty_anubis = "توب 20 شخص سرقوا فلوس :\n\n"
 ty_list = {}
 for k,v in pairs(ty_users) do
 local mony = redis:get("rrfff"..v)
@@ -9080,14 +9095,14 @@ redis:set(msg.sender.user_id.."first_name:", F_Name)
 if redis:sismember("booob",msg.sender.user_id) then
 if redis:ttl("iioo" .. msg.sender.user_id) >=1 then
 local hours = redis:ttl("iioo" .. msg.sender.user_id) / 60
-return bot.sendText(msg.chat_id,msg.id,"⇜ من شوي اخذت بخشيش استنى "..math.floor(hours).." دقيقة","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ من شوي اخذت بخشيش انتظر "..math.floor(hours).." دقيقة","md",true)
 end
 
 local jjjo = math.random(200,1000);
 ballanceed = redis:get("boob"..msg.sender.user_id) or 0
 bakigcj = ballanceed + jjjo
 redis:set("boob"..msg.sender.user_id , bakigcj)
-bot.sendText(msg.chat_id,msg.id,"⇜ دلعتك اديتك بخشيش "..jjjo.." دينار 💵","md",true)
+bot.sendText(msg.chat_id,msg.id,"⇜ دلعتك اعطيتك بخشيش "..jjjo.." دينار 💵","md",true)
 redis:setex("iioo" .. msg.sender.user_id,600, true)
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ انت لا تمتلك حساب بنكي ارسل › ( `انشاء حساب بنكي` )","md",true)
@@ -9103,7 +9118,7 @@ end
 bot.sendText(msg.chat_id,msg.id, "استعمل الامر كذا :\n\n`زرف` بالرد","md",true)
 end
 
-if text == 'زرف' or text == 'زرفو' or text == 'زرفه' and tonumber(msg.reply_to_message_id) ~= 0 then
+if text == 'زرف' or text == 'سرقة' or text == 'قطه' and tonumber(msg.reply_to_message_id) ~= 0 then
 ballanceed = redis:get("boob"..msg.sender.user_id) or 0
 krses = tonumber(redis:get("kreednum"..msg.sender.user_id))
 if redis:get("kreed"..msg.sender.user_id) and tonumber(ballanceed) > 5000000 then
@@ -9119,28 +9134,28 @@ bot.sendText(msg.chat_id,msg.id,"\n*⇜ لا يمتلك حسب في البنك*"
 return false
 end
 if Remsg.sender.user_id == msg.sender.user_id then
-bot.sendText(msg.chat_id,msg.id,"\n*⇜ عايز تزرف نفسك 🤡*","md",true)  
+bot.sendText(msg.chat_id,msg.id,"\n*⇜انت غبي؟ *","md",true)  
 return false
 end
 if redis:ttl("polic" .. msg.sender.user_id) >= 280 then
-return bot.sendText(msg.chat_id,msg.id,"⇜ انتا بالسجن 🏤 استنى ( 5 دقائق )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ انت بالسجن 🏤 انتظر ( 5 دقائق )","md",true)
 elseif redis:ttl("polic" .. msg.sender.user_id) >= 240 then
-return bot.sendText(msg.chat_id,msg.id,"⇜ انتا بالسجن 🏤 استنى ( 4 دقائق )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ انت بالسجن 🏤 انتظر ( 4 دقائق )","md",true)
 elseif redis:ttl("polic" .. msg.sender.user_id) >= 180 then
-return bot.sendText(msg.chat_id,msg.id,"⇜ انتا بالسجن 🏤 استنى ( 3 دقائق )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ انت بالسجن 🏤 انتظر ( 3 دقائق )","md",true)
 elseif redis:ttl("polic" .. msg.sender.user_id) >= 120 then
-return bot.sendText(msg.chat_id,msg.id,"⇜ انتا بالسجن 🏤 استنى ( 2 دقيقة )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ انت بالسجن 🏤 انتظر ( 2 دقيقة )","md",true)
 elseif redis:ttl("polic" .. msg.sender.user_id) >= 60 then
-return bot.sendText(msg.chat_id,msg.id,"⇜ انتا بالسجن 🏤 استنى ( 1 دقيقة )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ انت بالسجن 🏤 انتظر ( 1 دقيقة )","md",true)
 end
 if redis:ttl("hrame" .. Remsg.sender.user_id) >= 60 then
 local time = redis:ttl("hrame" .. Remsg.sender.user_id)
-return bot.sendText(msg.chat_id,msg.id,"⇜ الشخص مزروف من شويه\n⇜ يمكنك تزرفه بعد ( "..time.." دقيقة )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ الشخص مسروق من شويه\n⇜ يمكنك تسرقة بعد ( "..time.." ثانية)","md",true)
 end
 if redis:sismember("booob",Remsg.sender.user_id) then
 ballanceed = redis:get("boob"..Remsg.sender.user_id) or 0
 if tonumber(ballanceed) < 199 then
-return bot.sendText(msg.chat_id,msg.id, "⇜ لا يمكنك تزرفه فلوسه اقل من 200 دينار 💵","md",true)
+return bot.sendText(msg.chat_id,msg.id, "⇜ لا يمكنك تسرقة فلوسه اقل من 200 دينار 💵","md",true)
 end
 local hrame = math.floor(math.random() * 200) + 1;
 local hramee = math.floor(math.random() * 5) + 1;
@@ -9156,10 +9171,10 @@ local zoropeo = redis:get("rrfff"..msg.sender.user_id) or 0
 zoroprod = zoropeo + hrame
 redis:set("rrfff"..msg.sender.user_id,zoroprod)
 redis:sadd("rrfffid",msg.sender.user_id)
-bot.sendText(msg.chat_id,msg.id, "⇜ خذ يالحرامي زرفته "..hrame.." دينار 💵\n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ خذ يالحرامي سرقته "..hrame.." دينار 💵\n","md",true)
 else
 redis:setex("polic" .. msg.sender.user_id,300, true)
-bot.sendText(msg.chat_id,msg.id, "⇜ مسكتك الشرطة وانتا تزرف 🚔\n","md",true)
+bot.sendText(msg.chat_id,msg.id, "⇜ مسكتك الشرطة وانت تسرق 🚔\n","md",true)
 end
 else
 bot.sendText(msg.chat_id,msg.id, "⇜ لا يمتلك حساب بنكي ","md",true)
@@ -9592,7 +9607,7 @@ return false
 end
 if redis:ttl("attack" .. msg.sender.user_id) >= 60 then
   local time = redis:ttl("attack" .. msg.sender.user_id)
-return bot.sendText(msg.chat_id,msg.id,"⇜ خسرت بأخر معركة استنى ( "..time.." دقيقة )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ خسرت بأخر معركة انتظر ( "..time.." دقيقة )","md",true)
 end
 if redis:ttl("defen" .. Remsg.sender.user_id) >= 60 then
 local time = redis:ttl("defen" .. Remsg.sender.user_id)
@@ -10092,7 +10107,7 @@ redis:set(msg.sender.user_id.."first_name:", F_Name)
 if redis:sismember("booob",msg.sender.user_id) then
 if redis:ttl("yiioooo" .. msg.sender.user_id) >= 60 then
 local time = redis:ttl("yiioooo" .. msg.sender.user_id)
-return bot.sendText(msg.chat_id,msg.id,"⇜ فرصة ايجاد كنز آخر بعد ( "..time.." دقيقة )","md",true)
+return bot.sendText(msg.chat_id,msg.id,"⇜ فرصة ايجاد كنز آخر بعد ( "..time.." ثانية )","md",true)
 end
 local Textinggt = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22","23",}
 local Descriptioont = Textinggt[math.random(#Textinggt)]
@@ -10348,7 +10363,7 @@ local reply_markup = bot.replyMarkup{
 type = 'inline',
 data = {
 {
-{text = 'الزرف', data = msg.sender.user_id..'/topzrf'},{text = 'الفلوس', data = msg.sender.user_id..'/topmon'},
+{text = 'السرقة', data = msg.sender.user_id..'/topzrf'},{text = 'الفلوس', data = msg.sender.user_id..'/topmon'},
 },
 {
 {text = 'Source Black', url="t.me/M_D_I"},
